@@ -20,7 +20,7 @@ const appSlice = createSlice({
   initialState,
   reducers: {
     authenticate: (state, { payload }) => {
-      state.loggedIn = payload.loggedIn
+      state.loggedIn = false
       state.checked = payload.checked
     },
     saveMe: (state, { payload }) => {

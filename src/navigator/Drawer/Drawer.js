@@ -9,10 +9,12 @@ import TabNavigator from '../Tabs'
 
 const Drawer = createDrawerNavigator()
 
-const DrawerMenuContainer = (props) => {
+const DrawerMenuContainer = props => {
   const { state, ...rest } = props
   const newState = { ...state }
-  newState.routes = newState.routes.filter((item) => item.name !== 'Home')
+  console.log('rest ', rest)
+  console.log('state ', newState)
+  newState.routes = newState.routes.filter(item => item.name !== 'Login')
   return (
     <DrawerContentScrollView {...props}>
       <DrawerMenu {...props} />
@@ -21,8 +23,15 @@ const DrawerMenuContainer = (props) => {
   )
 }
 
-export default () => (
-  <Drawer.Navigator initialRouteName="Home" drawerContent={DrawerMenuContainer}>
-    <Drawer.Screen name="Home" component={TabNavigator} />
-  </Drawer.Navigator>
-)
+export default props => {
+  console.log('drawer props ', props)
+  return (
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen
+        name="Home"
+        component={TabNavigator}
+        initialParams={{ loggedIn: props.loggedIn }}
+      />
+    </Drawer.Navigator>
+  )
+}

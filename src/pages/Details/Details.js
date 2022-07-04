@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  StyleSheet, Text, View, StatusBar,
-} from 'react-native'
+import { StyleSheet, Text, View, StatusBar } from 'react-native'
 import Button from 'components/Button'
 import { colors } from 'theme'
 
@@ -21,7 +19,8 @@ const styles = StyleSheet.create({
 })
 
 const Details = ({ route, navigation }) => {
-  const from = route?.params?.from
+  const from =
+    route && route.params && route.params.from ? route.params.from : ''
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
