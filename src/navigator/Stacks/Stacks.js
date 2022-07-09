@@ -4,6 +4,7 @@ import { colors } from 'theme'
 import Login from 'pages/Login'
 import Home from 'pages/Home'
 import Profile from 'pages/Profile'
+import Selfie from 'pages/Selfie'
 import Details from 'pages/Details'
 import HeaderLeft from './HeaderLeft'
 import HeaderTitle from './HeaderTitle'
@@ -25,9 +26,11 @@ export const HomeNavigator = props => {
     headerTintColor: 'white',
     headerStyle: { backgroundColor: colors.darkPurple },
     headerTitleStyle: { fontSize: 18 },
-    headerShown: props.route.params.loggedIn,
+    headerShown: !props.route.params.hideNav,
   })
   console.log('rest ', rest)
+
+  props.navigation.setOptions({ tabBarVisible: !props.route.params.hideTabBar })
 
   return (
     <Stack.Navigator
@@ -40,6 +43,7 @@ export const HomeNavigator = props => {
         component={Login}
         options={({ navigation }) => ({
           title: 'Login',
+          tabBarStyle: { display: 'none' },
           headerLeft: () => <HeaderLeft navigation={navigation} />,
           headerTitle: () => <HeaderTitle />,
         })}
@@ -94,6 +98,39 @@ export const ProfileNavigator = () => {
         options={{
           title: 'Details',
         }}
+      />
+    </Stack.Navigator>
+  )
+}
+
+export const OnboardingNavigator = props => {
+  const { state, ...rest } = props
+  const newState = { ...state }
+  const [navigationProps, setNavigationProps] = useState({
+    headerTintColor: 'white',
+    headerStyle: { backgroundColor: colors.darkPurple },
+    headerTitleStyle: { fontSize: 18 },
+    headerShown: !props.route.params.hideNav,
+  })
+  console.log('rest ', rest)
+
+  props.navigation.setOptions({ tabBarVisible: !props.route.params.hideTabBar })
+
+  return (
+    <Stack.Navigator
+      initialRouteName="Selfie"
+      headerMode="screen"
+      screenOptions={navigationProps}
+    >
+      <Stack.Screen
+        name="Selfie"
+        component={Selfie}
+        options={({ navigation }) => ({
+          title: 'Login',
+          tabBarStyle: { display: 'none' },
+          headerLeft: () => <HeaderLeft navigation={navigation} />,
+          headerTitle: () => <HeaderTitle />,
+        })}
       />
     </Stack.Navigator>
   )

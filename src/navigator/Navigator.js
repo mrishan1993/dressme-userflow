@@ -7,7 +7,9 @@ import { authenticate } from 'slices/app.slice'
 import DrawerNavigator from './Drawer'
 
 const Navigator = () => {
-  const { checked, loggedIn } = useSelector(state => state.app)
+  const { checked, loggedIn, hideTabBar, hideNav } = useSelector(
+    state => state.app,
+  )
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -19,7 +21,11 @@ const Navigator = () => {
 
   return checked ? (
     <NavigationContainer>
-      <DrawerNavigator loggedIn={loggedIn} />
+      <DrawerNavigator
+        loggedIn={loggedIn}
+        hideTabBar={hideTabBar}
+        hideNav={hideNav}
+      />
     </NavigationContainer>
   ) : (
     <Text>Loading...</Text>

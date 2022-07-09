@@ -8,6 +8,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
   checked: false,
   loggedIn: false,
+  hideTabBar: true,
+  hideNav: true,
   me: {},
 }
 

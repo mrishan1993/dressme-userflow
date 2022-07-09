@@ -5,7 +5,7 @@ import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import { colors } from 'theme'
 
 // stack navigators
-import { HomeNavigator, ProfileNavigator } from '../Stacks'
+import { HomeNavigator, ProfileNavigator, OnboardingNavigator } from '../Stacks'
 
 const Tab = createBottomTabNavigator()
 
@@ -51,13 +51,26 @@ const TabNavigator = props => {
           // paddingTop: 5,
         },
       }}
-      initialRouteName="Home"
+      initialRouteName="Onboarding"
       swipeEnabled={false}
     >
       <Tab.Screen
         name="Home"
         component={HomeNavigator}
-        initialParams={{ loggedIn: props.route.params.loggedIn }}
+        initialParams={{
+          loggedIn: props.route.params.loggedIn,
+          hideTabBar: props.route.params.hideTabBar,
+          hideNav: props.route.params.hideNav,
+        }}
+      />
+      <Tab.Screen
+        name="Onboarding"
+        component={OnboardingNavigator}
+        initialParams={{
+          loggedIn: props.route.params.loggedIn,
+          hideTabBar: props.route.params.hideTabBar,
+          hideNav: props.route.params.hideNav,
+        }}
       />
       <Tab.Screen name="Profile" component={ProfileNavigator} />
     </Tab.Navigator>

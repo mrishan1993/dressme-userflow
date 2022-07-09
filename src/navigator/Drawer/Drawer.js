@@ -30,7 +30,11 @@ export default props => {
       <Drawer.Screen
         name="Home"
         component={TabNavigator}
-        initialParams={{ loggedIn: props.loggedIn }}
+        initialParams={{
+          loggedIn: props.loggedIn,
+          hideTabBar: props.hideTabBar,
+          hideNav: props.hideNav,
+        }}
       />
     </Drawer.Navigator>
   )
