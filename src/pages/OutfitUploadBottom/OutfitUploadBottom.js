@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import {
   StyleSheet,
@@ -8,16 +8,25 @@ import {
   Modal,
   Pressable,
   Image,
+  FlatList,
+  Dimensions,
+  SafeAreaView,
+  BackHandler,
+  ImageBackground,
 } from 'react-native'
-import Button from 'components/Button'
+import _ from 'lodash'
 import { colors } from 'theme'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import {
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler'
 import FontIcon from 'react-native-vector-icons/FontAwesome5'
 import * as ImagePicker from 'expo-image-picker'
 
+const screenWidth = Dimensions.get('window').width
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
+    flex: 5,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -93,14 +102,62 @@ const styles = StyleSheet.create({
     width: '100%',
     borderColor: colors.pink,
   },
+  safeAreaContainer: {
+    flex: 4,
+    alignItems: 'center',
+    padding: 10,
+  },
+  textBox: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  safeAreaInputContainer: {
+    width: screenWidth,
+  },
+  fullScreenModalContainer: {
+    flex: 5,
+    width: screenWidth,
+  },
+  deleteContainer: {
+    position: 'absolute',
+    bottom: 5,
+    right: 5,
+    alignItems: 'center',
+  },
 })
 
-const Selfie = ({ navigation }) => {
+const OutfitUploadBottom = ({ navigation }) => {
   const [galleryModalVisible, setGalleryModalVisible] = useState(false)
-  const [imageSource, setImageSource] = useState('')
+  const [images, setImages] = useState([])
+  const [fullScreen, setFullScreen] = useState({
+    fullScreenImage: '',
+    fullScreenModal: false,
+  })
+  const numColumns = 3
+  const tileSize = screenWidth / numColumns
+  var fullImage
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick)
+    return () => {
+      BackHandler.removeEventListener(
+        'hardwareBackPress',
+        handleBackButtonClick,
+      )
+    }
+  }, [fullScreen])
+  function handleBackButtonClick() {
+    if (fullScreen.fullScreenModal) {
+      setFullScreen({
+        fullScreenImage: '',
+        fullScreenModal: !fullScreen.fullScreenModal,
+      })
+    }
+    return true
+  }
   let openImagePickerAsync = async () => {
     setGalleryModalVisible(false)
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    let imageArray = images
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!')
@@ -113,11 +170,14 @@ const Selfie = ({ navigation }) => {
       aspect: [3, 4],
     })
     console.log(pickerResult)
-    setImageSource({ localURI: pickerResult.uri })
+    imageArray.push(pickerResult.uri)
+
+    setImages([...imageArray])
   }
   let openCameraAsync = async () => {
     setGalleryModalVisible(false)
     let permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+    let imageArray = images
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera')
@@ -130,28 +190,82 @@ const Selfie = ({ navigation }) => {
       aspect: [3, 4],
     })
     console.log(pickerResult)
-    setImageSource({ localURI: pickerResult.uri })
+    imageArray.push(pickerResult.uri)
+    console.log(images)
+    setImages([...imageArray])
   }
   let openGalleryModal = () => {
     setGalleryModalVisible(true)
   }
+  let renderImageItem = ({ item }) => {
+    console.log('tilesize ', item)
+    return (
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={event => openImageFullScreen(item)}
+      >
+        <ImageBackground
+          source={{ uri: item }}
+          style={{ height: tileSize, width: tileSize }}
+        >
+          <View style={styles.deleteContainer}>
+            <TouchableWithoutFeedback>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={event => deleteImage(item)}
+              >
+                <FontIcon name="trash" color={colors.gray} size={20} />
+              </TouchableOpacity>
+            </TouchableWithoutFeedback>
+          </View>
+        </ImageBackground>
+      </TouchableOpacity>
+    )
+  }
+  let openImageFullScreen = item => {
+    console.log('full image uri ', item)
+    setFullScreen({
+      fullScreenImage: item,
+      fullScreenModal: true,
+    })
+  }
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
-      {imageSource ? (
+      {images.length > 0 && !fullScreen.fullScreenModal ? (
         <View style={styles.promptContainer}>
-          <Image style={styles.image} source={{ uri: imageSource.localURI }} />
-          <TouchableOpacity onPress={openGalleryModal}>
-            <FontIcon name="camera" color={colors.pink} size={30} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Upload different picture</Text>
+          <SafeAreaView style={styles.safeAreaContainer}>
+            <View style={styles.safeAreaInputContainer}>
+              <FlatList
+                data={images}
+                renderItem={renderImageItem}
+                ItemSeparatorComponent={() => <View style={{ height: 3 }} />}
+                numColumns={3}
+                key={3}
+              />
+            </View>
+          </SafeAreaView>
+
+          <View style={styles.textBox}>
+            <TouchableOpacity onPress={openGalleryModal}>
+              <FontIcon name="camera" color={colors.pink} size={30} />
+            </TouchableOpacity>
+            <Text style={styles.title}>Upload another shorts/jeans</Text>
+          </View>
         </View>
-      ) : (
+      ) : !fullScreen.fullScreenModal ? (
         <View style={styles.promptContainerBefore}>
           <TouchableOpacity onPress={openGalleryModal}>
             <FontIcon name="camera" color={colors.pink} size={100} />
           </TouchableOpacity>
-          <Text style={styles.title}>Upload your full body picture</Text>
+          <Text style={styles.title}>Upload your shorts/jeans</Text>
+        </View>
+      ) : (
+        <View style={styles.fullScreenModalContainer}>
+          <Image
+            source={{ uri: fullScreen.fullScreenImage }}
+            style={{ height: '100%', width: Dimensions.width }}
+          />
         </View>
       )}
 
@@ -218,12 +332,12 @@ const Selfie = ({ navigation }) => {
   )
 }
 
-Selfie.propTypes = {
+OutfitUploadBottom.propTypes = {
   navigation: PropTypes.shape({ navigate: PropTypes.func }),
 }
 
-Selfie.defaultProps = {
+OutfitUploadBottom.defaultProps = {
   navigation: { navigate: () => null },
 }
 
-export default Selfie
+export default OutfitUploadBottom
