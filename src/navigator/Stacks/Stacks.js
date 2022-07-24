@@ -7,6 +7,7 @@ import Profile from 'pages/Profile'
 import Selfie from 'pages/Selfie'
 import OutfitUploadTop from 'pages/OutfitUploadTop'
 import OutfitUploadBottom from 'pages/OutfitUploadBottom'
+import Questions from 'pages/Questions'
 import Details from 'pages/Details'
 import HeaderLeft from './HeaderLeft'
 import HeaderTitle from './HeaderTitle'
@@ -120,10 +121,20 @@ export const OnboardingNavigator = props => {
 
   return (
     <Stack.Navigator
-      initialRouteName="OutfitUploadBottom"
+      initialRouteName="Questions"
       headerMode="screen"
       screenOptions={navigationProps}
     >
+      <Stack.Screen
+        name="Questions"
+        component={Questions}
+        options={({ navigation }) => ({
+          title: 'Login',
+          tabBarStyle: { display: 'none' },
+          headerLeft: () => <HeaderLeft navigation={navigation} />,
+          headerTitle: () => <HeaderTitle />,
+        })}
+      />
       <Stack.Screen
         name="Selfie"
         component={Selfie}
