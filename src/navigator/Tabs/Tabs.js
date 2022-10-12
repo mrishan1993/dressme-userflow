@@ -9,7 +9,7 @@ import { HomeNavigator, ProfileNavigator, OnboardingNavigator } from '../Stacks'
 
 const Tab = createBottomTabNavigator()
 
-const TabNavigator = props => {
+const TabNavigator = (props) => {
   console.log('tab props ', props)
   return (
     <Tab.Navigator
@@ -51,7 +51,7 @@ const TabNavigator = props => {
           // paddingTop: 5,
         },
       }}
-      initialRouteName="Onboarding"
+      initialRouteName="Home"
       swipeEnabled={false}
     >
       <Tab.Screen

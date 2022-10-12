@@ -22,7 +22,7 @@ const Stack = createStackNavigator()
 // Navigators
 // ------------------------------------
 
-export const HomeNavigator = props => {
+export const HomeNavigator = (props) => {
   const { state, ...rest } = props
   const newState = { ...state }
   const [navigationProps, setNavigationProps] = useState({
@@ -31,7 +31,7 @@ export const HomeNavigator = props => {
     headerTitleStyle: { fontSize: 18 },
     headerShown: !props.route.params.hideNav,
   })
-  console.log('rest ', rest)
+  console.log('rest props ', rest)
 
   props.navigation.setOptions({ tabBarVisible: !props.route.params.hideTabBar })
 
@@ -54,15 +54,6 @@ export const HomeNavigator = props => {
       <Stack.Screen
         name="Home"
         component={Home}
-        options={({ navigation }) => ({
-          title: 'Home',
-          headerLeft: () => <HeaderLeft navigation={navigation} />,
-          headerTitle: () => <HeaderTitle />,
-        })}
-      />
-      <Stack.Screen
-        name="Details"
-        component={Details}
         options={({ navigation }) => ({
           title: 'Home',
           headerLeft: () => <HeaderLeft navigation={navigation} />,
@@ -106,7 +97,7 @@ export const ProfileNavigator = () => {
   )
 }
 
-export const OnboardingNavigator = props => {
+export const OnboardingNavigator = (props) => {
   const { state, ...rest } = props
   const newState = { ...state }
   const [navigationProps, setNavigationProps] = useState({

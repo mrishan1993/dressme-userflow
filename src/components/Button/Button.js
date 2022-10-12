@@ -7,6 +7,7 @@ const styles = {
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 5,
+    flexDirection: 'row',
   },
   text: {
     textAlign: 'center',
@@ -29,8 +30,9 @@ const Button = ({
   const txtStyle = [styles.text, { color }, textStyle]
   return (
     <TouchableOpacity onPress={onPress} style={btnStyle}>
-      {title && <Text style={txtStyle}>{title}</Text>}
       {children}
+      {title && <Text style={txtStyle}>{title}</Text>}
+
     </TouchableOpacity>
   )
 }

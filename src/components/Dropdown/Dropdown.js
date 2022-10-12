@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useState, useEffect } from 'react'
-import { TouchableOpacity, Text, View, Dimensions } from 'react-native'
+import {
+  TouchableOpacity, Text, View, Dimensions,
+} from 'react-native'
 import { Picker } from '@react-native-picker/picker'
-import InputText from "components/InputText"
+import InputText from 'components/InputText'
+
 const screenWidth = Dimensions.get('window').width
 const styles = {
   root: {
@@ -21,6 +23,10 @@ const styles = {
   dropdownContainer: {
     flexDirection: 'row',
   },
+  inputText: {
+    width: screenWidth * 0.8,
+    borderColor: '#D8D9CF',
+  },
 }
 
 const Dropdown = (props) => {
@@ -28,20 +34,20 @@ const Dropdown = (props) => {
   const [selectedIndex, setSelectedIndex] = useState()
   const [pickerOptions, setPickerOptions] = useState([])
   const onInput = (value) => {
-    console.log("Value ", value)
+    console.log('Value ', value)
   }
   useEffect(() => {
     setPickerOptions(props.pickerOptions)
   }, [])
   const setDropdownInput = (value, index) => {
-    console.log("seelcted option ", index)
+    console.log('seelcted option ', index)
     setSelectedOption(value)
     setSelectedIndex(index)
     props.setSelectionOptionCallback(value)
   }
   return (
     <View style={styles.dropdownContainer}>
-      <InputText value={selectedOption} style={{width: screenWidth*0.8 }} editable={false} onInput={onInput} />
+      <InputText value={selectedOption} style={styles.inputText} editable={false} onInput={onInput} />
       <Picker
         selectedValue={selectedOption}
         style={styles.picker}
@@ -53,12 +59,10 @@ const Dropdown = (props) => {
         onValueChange={(itemValue, itemIndex) => setDropdownInput(itemValue, itemIndex)}
       >
         {pickerOptions.length > 0 ? (
-          pickerOptions.map(function(o) {
-            return (
-              <Picker.Item label={o.label} value={o.value} />
-            )
-          } )
-        ): <Picker.Item label="None" value="None" />}
+          pickerOptions.map((o) => (
+            <Picker.Item label={o.label} value={o.value} />
+          ))
+        ) : <Picker.Item label="None" value="None" />}
       </Picker>
     </View>
   )

@@ -8,15 +8,17 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderWidth: 1,
+    color: '#E26868',
   },
 })
 
 const InputText = (props) => {
   const [text, onChangeText] = React.useState('')
-  console.log("value ", props.value)
+  console.log('value ', props.value)
   const controlledChange = (e) => {
-    onChangeText(e.target.value)
-    props.onInput(e.target.value)
+    console.log('input ', e)
+    onChangeText(e)
+    props.onInput(e)
   }
 
   return (
@@ -25,7 +27,7 @@ const InputText = (props) => {
         style={[styles.input, props.style]}
         onChangeText={controlledChange}
         value={props.value}
-        editable={props.editable === false ? false : true}
+        editable={props.editable !== false}
       />
     </SafeAreaView>
   )

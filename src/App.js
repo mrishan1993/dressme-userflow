@@ -17,7 +17,7 @@ const App = () => {
     await Promise.all([...imageAssets, ...fontAssets])
     setDidLoad(true)
   }
-
+  console.disableYellowBox = true
   useEffect(() => {
     handleLoadAssets()
   }, [])

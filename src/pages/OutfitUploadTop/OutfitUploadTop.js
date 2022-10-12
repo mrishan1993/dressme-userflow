@@ -15,6 +15,7 @@ import {
   ImageBackground,
 } from 'react-native'
 import _ from 'lodash'
+import Button from 'components/Button'
 import { colors } from 'theme'
 import {
   TouchableOpacity,
@@ -124,6 +125,11 @@ const styles = StyleSheet.create({
     right: 5,
     alignItems: 'center',
   },
+  button: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginBottom: 30,
+  },
 })
 
 const OutfitUploadTop = ({ navigation }) => {
@@ -135,7 +141,7 @@ const OutfitUploadTop = ({ navigation }) => {
   })
   const numColumns = 3
   const tileSize = screenWidth / numColumns
-  var fullImage
+  let fullImage
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', handleBackButtonClick)
     return () => {
@@ -154,17 +160,17 @@ const OutfitUploadTop = ({ navigation }) => {
     }
     return true
   }
-  let openImagePickerAsync = async () => {
+  const openImagePickerAsync = async () => {
     setGalleryModalVisible(false)
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    let imageArray = images
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    const imageArray = images
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!')
       return
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       base64: false,
       aspect: [3, 4],
@@ -174,17 +180,17 @@ const OutfitUploadTop = ({ navigation }) => {
 
     setImages([...imageArray])
   }
-  let openCameraAsync = async () => {
+  const openCameraAsync = async () => {
     setGalleryModalVisible(false)
-    let permissionResult = await ImagePicker.requestCameraPermissionsAsync()
-    let imageArray = images
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+    const imageArray = images
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera')
       return
     }
 
-    let pickerResult = await ImagePicker.launchCameraAsync({
+    const pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       base64: false,
       aspect: [3, 4],
@@ -194,15 +200,15 @@ const OutfitUploadTop = ({ navigation }) => {
     console.log(images)
     setImages([...imageArray])
   }
-  let openGalleryModal = () => {
+  const openGalleryModal = () => {
     setGalleryModalVisible(true)
   }
-  let renderImageItem = ({ item }) => {
+  const renderImageItem = ({ item }) => {
     console.log('tilesize ', item)
     return (
       <TouchableOpacity
         activeOpacity={0.5}
-        onPress={event => openImageFullScreen(item)}
+        onPress={(event) => openImageFullScreen(item)}
       >
         <ImageBackground
           source={{ uri: item }}
@@ -212,7 +218,7 @@ const OutfitUploadTop = ({ navigation }) => {
             <TouchableWithoutFeedback>
               <TouchableOpacity
                 activeOpacity={0.5}
-                onPress={event => deleteImage(item)}
+                onPress={(event) => deleteImage(item)}
               >
                 <FontIcon name="trash" color={colors.gray} size={20} />
               </TouchableOpacity>
@@ -222,7 +228,7 @@ const OutfitUploadTop = ({ navigation }) => {
       </TouchableOpacity>
     )
   }
-  let openImageFullScreen = item => {
+  let openImageFullScreen = (item) => {
     console.log('full image uri ', item)
     setFullScreen({
       fullScreenImage: item,
@@ -252,6 +258,15 @@ const OutfitUploadTop = ({ navigation }) => {
             </TouchableOpacity>
             <Text style={styles.title}>Upload another top</Text>
           </View>
+          <Button
+            title="Next"
+            color="#D8D9CF"
+            backgroundColor="#E26868"
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('OutfitUploadBottom', { from: 'OutfitUploadTop' })
+            }}
+          />
         </View>
       ) : !fullScreen.fullScreenModal ? (
         <View style={styles.promptContainerBefore}>
@@ -272,7 +287,7 @@ const OutfitUploadTop = ({ navigation }) => {
       <View style={styles.modalViewWrapper}>
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent
           visible={galleryModalVisible}
           onRequestClose={() => {
             setGalleryModalVisible(!galleryModalVisible)

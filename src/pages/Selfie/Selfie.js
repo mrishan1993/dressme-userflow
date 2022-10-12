@@ -93,21 +93,29 @@ const styles = StyleSheet.create({
     width: '100%',
     borderColor: colors.pink,
   },
+  buttonView: {
+    marginTop: 50,
+  },
+  button: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginTop: 10,
+  },
 })
 
 const Selfie = ({ navigation }) => {
   const [galleryModalVisible, setGalleryModalVisible] = useState(false)
   const [imageSource, setImageSource] = useState('')
-  let openImagePickerAsync = async () => {
+  const openImagePickerAsync = async () => {
     setGalleryModalVisible(false)
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera roll is required!')
       return
     }
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       base64: false,
       aspect: [3, 4],
@@ -115,16 +123,16 @@ const Selfie = ({ navigation }) => {
     console.log(pickerResult)
     setImageSource({ localURI: pickerResult.uri })
   }
-  let openCameraAsync = async () => {
+  const openCameraAsync = async () => {
     setGalleryModalVisible(false)
-    let permissionResult = await ImagePicker.requestCameraPermissionsAsync()
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync()
 
     if (permissionResult.granted === false) {
       alert('Permission to access camera')
       return
     }
 
-    let pickerResult = await ImagePicker.launchCameraAsync({
+    const pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       base64: false,
       aspect: [3, 4],
@@ -132,7 +140,7 @@ const Selfie = ({ navigation }) => {
     console.log(pickerResult)
     setImageSource({ localURI: pickerResult.uri })
   }
-  let openGalleryModal = () => {
+  const openGalleryModal = () => {
     setGalleryModalVisible(true)
   }
   return (
@@ -145,6 +153,15 @@ const Selfie = ({ navigation }) => {
             <FontIcon name="camera" color={colors.pink} size={30} />
           </TouchableOpacity>
           <Text style={styles.title}>Upload different picture</Text>
+          <Button
+            title="Next"
+            color="#D8D9CF"
+            backgroundColor="#E26868"
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate('OutfitUploadTop', { from: 'Selfie' })
+            }}
+          />
         </View>
       ) : (
         <View style={styles.promptContainerBefore}>
@@ -158,7 +175,7 @@ const Selfie = ({ navigation }) => {
       <View style={styles.modalViewWrapper}>
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent
           visible={galleryModalVisible}
           onRequestClose={() => {
             setGalleryModalVisible(!galleryModalVisible)

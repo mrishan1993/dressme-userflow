@@ -1,8 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { StyleSheet, Text, View, StatusBar } from 'react-native'
+import {
+  StyleSheet, Text, View, StatusBar,
+} from 'react-native'
 import Button from 'components/Button'
 import { colors } from 'theme'
+import FontIcon from 'react-native-vector-icons/Ionicons'
 
 const styles = StyleSheet.create({
   root: {
@@ -16,20 +19,28 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
   },
+  emoIcons: {
+    marginRight: 10,
+  },
 })
 
 const Login = ({ navigation }) => (
   <View style={styles.root}>
     <StatusBar barStyle="light-content" />
-    <Text style={styles.title}>Login</Text>
-    <Button
-      title="Go to Details"
-      color="white"
-      backgroundColor={colors.lightPurple}
-      onPress={() => {
-        navigation.navigate('Details', { from: 'Login' })
-      }}
-    />
+    <View>
+
+      <Button
+        title="Login with Google"
+        color="#5B374D"
+        backgroundColor="#EDEDED"
+        onPress={() => {
+          navigation.navigate('Onboarding', { from: 'Login' })
+        }}
+      >
+        <FontIcon style={styles.emoIcons} name="logo-google" color="#5B374D" size={20} />
+      </Button>
+    </View>
+
   </View>
 )
 
